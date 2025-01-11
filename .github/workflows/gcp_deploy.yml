@@ -23,5 +23,4 @@ jobs:
     - id: 'gcloud'
       name: 'gcloud'
       run: |
-        gcloud config set project 'unified-adviser-447010-g9'
-        gcloud services list --project 'My First Project'
+        gcloud storage buckets create gs://first-bucket90 --location=us-east1
