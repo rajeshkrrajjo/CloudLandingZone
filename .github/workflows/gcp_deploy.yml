@@ -6,6 +6,7 @@ on:
 
 permissions:
   id-token: write
+  contents: read
 
 jobs:
   Get_OIDC_ID_token:
@@ -13,12 +14,20 @@ jobs:
     environment: prod
     
     steps:
+    - name: Action Checkout
+      uses: actions/checkout@v3
+     
     - name: GCP OIDC Login
       id: auth
       uses: 'google-github-actions/auth@v2'
       with:
-        service_account: ${{secrets.GCP_SERVICE_ACCOUNT}}
-        workload_identity_provider: ${{secrets.FED_IDENTITY_PROVIDER}}
+        service_account: oidc-account@unified-adviser-447010-g9.iam.gserviceaccount.com
+        workload_identity_provider: projects/420668524245/locations/global/workloadIdentityPools/github/providers/github-openid
+
+    - name: GCloud SDK
+      uses: 'google-github-actions/setup-gcloud@v1'
+      with: 
+        version: '>= 418.0.0'
 
     - id: 'gcloud'
       name: 'gcloud'
