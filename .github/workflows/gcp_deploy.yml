@@ -22,7 +22,7 @@ jobs:
       uses: 'google-github-actions/auth@v2'
       with:
         service_account: oidc-account@unified-adviser-447010-g9.iam.gserviceaccount.com
-        workload_identity_provider: /projects/420668524245/locations/global/workloadIdentityPools/githubpool
+        workload_identity_provider: projects/420668524245/locations/global/workloadIdentityPools/githubpool/providers/github-actions-provider
 
     - name: GCloud SDK
       uses: 'google-github-actions/setup-gcloud@v1'
