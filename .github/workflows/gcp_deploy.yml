@@ -10,6 +10,8 @@ permissions:
 jobs:
   Get_OIDC_ID_token:
     runs-on: ubuntu-latest
+    environment: prod
+    
     steps:
     - name: GCP OIDC Login
       id: auth
