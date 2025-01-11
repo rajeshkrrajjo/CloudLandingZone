@@ -1,0 +1,24 @@
+name: List services in GCP
+on:
+  push:
+     branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+
+jobs:
+  Get_OIDC_ID_token:
+    runs-on: ubuntu-latest
+    steps:
+    - name: GCP OIDC Login
+      id: auth
+      uses: 'google-github-actions/auth@v2'
+      with:
+        service_account: ${{secrets.GCP_SERVICE_ACCOUNT}}
+        workload_identity_provider: ${{secrets.FED_IDENTITY_PROVIDER}}
+
+    - id: 'gcloud'
+      name: 'gcloud'
+      run: |
+        gcloud services list --project "My First Project"
