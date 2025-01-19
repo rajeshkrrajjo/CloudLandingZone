@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  Get_OIDC_ID_token:
+  terraform_deploy:
     runs-on: ubuntu-latest
     environment: prod
     
@@ -35,7 +35,7 @@ jobs:
           version: 0.13.4
     - name: Terraform apply
       run: |
-        cd CloudLandingZone/terraform/gcp
+        cd gcp
         terraform init
         terraform plan
         terraform apply -auto-approve
