@@ -29,7 +29,15 @@ jobs:
       with: 
         version: '>= 418.0.0'
 
-    - id: 'gcloud'
-      name: 'gcloud'
+    - name: Install Terraform
+      uses: little-core-labs/install-terraform@v2.0.0
+      with:
+          version: 0.13.4
+    - name: Terraform apply
       run: |
-        gcloud storage buckets create gs://first-bucket90 --location=us-east1
+        cd CloudLandingZone/terraform/gcp
+        terraform init
+        terraform plan
+        terraform apply -auto-approve
+    
+
