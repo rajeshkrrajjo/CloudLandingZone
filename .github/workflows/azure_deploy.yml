@@ -33,7 +33,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          az acccount show
+          az account show
 
     - name: Terraform init
       id: init
