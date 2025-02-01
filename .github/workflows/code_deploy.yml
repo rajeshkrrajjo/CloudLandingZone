@@ -20,6 +20,6 @@ jobs:
     
         steps:
           - name: Terraform Plan
-            uses: ./.github/actions/action.yml
+            uses: .\.github\actions\action.yml
             with:
                 working-directory: azure
