@@ -19,7 +19,10 @@ jobs:
         environment: prod
     
         steps:
+          - name: Checkout code
+            uses: actions/checkout@v2
+            
           - name: Terraform Plan
-            uses: ./.github/actions
+            uses: ./.github/actions/action.yml
             with:
                 working-directory: azure
