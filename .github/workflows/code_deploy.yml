@@ -1,0 +1,22 @@
+name: Azure Terrform Plan
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'azure/**'
+  workflow_dispatch:
+
+permissions:
+    id-token: write
+    issues: write
+    pull-requests: write
+    contents: read
+
+jobs:
+    environment: prod
+    steps:
+        - name: Terraform Plan
+          uses: ./actions/action.yml
+          with:
+            working-directory: azure
