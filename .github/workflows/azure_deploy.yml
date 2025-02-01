@@ -1,7 +1,11 @@
 name: Deploy Resources to Azure
 on:
-  push:
-     branches: [ "main" ]
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'azure/**'
+  workflow_dispatch:
 
 
 permissions:
@@ -11,19 +15,29 @@ permissions:
   contents: read
 
 jobs:
-  terraform_deploy:
+  terraform_plan:
+    defaults:
+      run:
+        working-directory: ./cluster-deployment
+    name: Terraform Plan
     runs-on: ubuntu-latest
     environment: prod
     
     steps:
-    - name: Action Checkout
-      uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
     - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_version: 0.13.4
-     
+      uses: hashicorp/setup-terraform@v2
+
+    - name: Terraform Fmt
+      id: fmt
+      run: terraform fmt -check
+
+    - name: Terraform Init
+      id: init
+      run: terraform init -backend-config="resource_group_name=${{vars.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{vars.AZURE_STORAGE_ACCOUNT_NAME}}" -backend-config="container_name=${{vars.CONTAINER_NAME}}"
+    
     - name: Azure Login
       uses: azure/login@v2
       with:
