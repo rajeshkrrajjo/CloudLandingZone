@@ -14,9 +14,12 @@ permissions:
     contents: read
 
 jobs:
-    environment: prod
-    steps:
-        - name: Terraform Plan
-          uses: ./actions/action.yml
-          with:
-            working-directory: azure
+    terraform_plan:
+        runs-on: ubuntu-latest
+        environment: prod
+    
+        steps:
+          - name: Terraform Plan
+            uses: ./actions/action.yml
+            with:
+                working-directory: azure
