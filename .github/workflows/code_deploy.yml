@@ -24,6 +24,9 @@ jobs:
     terraform_plan:
         runs-on: ubuntu-latest
         environment: prod
+        defaults:
+            run:
+              working-directory: ./azure/deploy
     
         steps:
         - name: Checkout code
@@ -32,8 +35,6 @@ jobs:
         - name: Terraform Plan Action
           uses: ./.github/actions/terraformplan
           with:
-            working_directory: './azure/deploy'
-            environment: 'prod'
             RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
             STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
             CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
