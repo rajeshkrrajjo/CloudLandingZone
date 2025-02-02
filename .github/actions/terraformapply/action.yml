@@ -35,7 +35,7 @@ runs:
             shell: bash
             run: |
               cd ${{ inputs.parameters }}
-              terraform init -backend-config="resource_group_name=${{vars.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{vars.STORAGE_ACCOUNT}}" -backend-config="container_name=${{vars.CONTAINER_NAME}}"
+              terraform init -backend-config="resource_group_name=${{inputs.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{inputs.STORAGE_ACCOUNT}}" -backend-config="container_name=${{inputs.CONTAINER_NAME}}"
 
           - name: Download Terraform Plan
             uses: actions/download-artifact@v4
