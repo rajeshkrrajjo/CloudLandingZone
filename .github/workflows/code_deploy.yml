@@ -35,9 +35,9 @@ jobs:
         - name: Azure Login
           uses: azure/login@v2
           with:
-            client-id: ${{ secrets.CLIENT_ID }}
             tenant-id: ${{ secrets.TENANT_ID }}
-            subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
         
         - name: Terraform Plan Action
           uses: ./.github/actions/terraformplan
