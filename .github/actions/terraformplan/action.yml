@@ -1,6 +1,10 @@
 name: 'TerraformPlan'
 description: 'Workflow does Terraform Plan'
 inputs:
+  parameters:
+    description: 'Path to Terraform files'
+    required: true
+    type: string
   RESOURCE_GROUP:
     description: 'Azure Resource Group'
     required: true
@@ -55,6 +59,7 @@ runs:
         shell: bash
         run: |
           export exitcode=0
+          cd ${{inputs.parameters}}
           terraform plan -no-color -var-file="./parameters/dev.tfvars" -out main.tfplan || export exitcode=$?
           echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
           if [ $exitcode -eq 1 ]; then
