@@ -105,7 +105,7 @@ jobs:
              echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
 
     terraform-apply:
-        needs: terraform-plan
+        needs: terraform_plan
         name: Terraform Apply
         runs-on: ubuntu-latest
         environment: prod
