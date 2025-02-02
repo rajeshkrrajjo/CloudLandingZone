@@ -1,15 +1,6 @@
 name: 'TerraformPlan'
 description: 'Workflow does Terraform Plan'
 inputs:
-  workingdirectory: 
-    description: 'Working directory of terraform code'
-    required: true
-    default: 'azure'
-  environment:
-    description: 'Environment to deploy'
-    required: true
-    default: 'prod'
-    type: environment
   RESOURCE_GROUP:
     description: 'Azure Resource Group'
     required: true
