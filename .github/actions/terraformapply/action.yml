@@ -1,0 +1,51 @@
+name: 'TerraformApply'
+description: 'Workflow does Terraform apply'
+inputs:
+  parameters:
+    description: 'Path to Terraform files'
+    required: true
+    type: string
+  RESOURCE_GROUP:
+    description: 'Azure Resource Group'
+    required: true
+    type: string
+  STORAGE_ACCOUNT:
+    description: 'Azure Storage Account'
+    required: true
+    type: string
+  CONTAINER_NAME:
+    description: 'Azure Container Name'
+    required: true
+    type: string
+outputs:
+  random-number:
+    description: "Random number"
+    value: ${{ steps.random-number-generator.outputs.random-number }}
+runs:
+  using: "composite"
+            
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v2
+
+          - name: Setup Terraform
+            uses: hashicorp/setup-terraform@v2
+
+          - name: Terraform init
+            id: init
+            shell: bash
+            run: |
+              cd ${{ inputs.parameters }}
+              terraform init -backend-config="resource_group_name=${{vars.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{vars.STORAGE_ACCOUNT}}" -backend-config="container_name=${{vars.CONTAINER_NAME}}"
+
+          - name: Download Terraform Plan
+            uses: actions/download-artifact@v4
+            with:
+             name: tfplan
+             path: ${{ inputs.parameters }}
+
+          - name: Terraform Apply
+            shell: bash
+            run: |
+              cd ${{ inputs.parameters }}
+              terraform apply -auto-approve "./main.tfplan"

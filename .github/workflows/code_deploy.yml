@@ -45,3 +45,11 @@ jobs:
             RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
             STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
             CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+    
+        - name: Terraform Apply
+          uses: ./.github/actions/terraformapply
+          with:
+            parameters: './azure/deploy'
+            RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
+            STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
+            CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
