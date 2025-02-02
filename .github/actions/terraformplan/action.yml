@@ -26,43 +26,18 @@ runs:
   steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
-      - name: Set Working Directory
-        shell: bash
-        run: |
-          cd ${{inputs.parameters}}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
-      - name: Terraform Fmt
-        id: fmt
-        shell: bash
-        run: |
-          terraform fmt -check
-
-      - name: Terraform Init
-        id: init
-        shell: bash
-        run: |
-          terraform init -backend-config="resource_group_name=${{inputs.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{inputs.STORAGE_ACCOUNT}}" -backend-config="container_name=${{inputs.CONTAINER_NAME}}"
-
-      - name: Terraform Validate
-        id: validate
-        shell: bash
-        run: |
-          terraform validate -no-color
-
-      - name: tfsec
-        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
-        with:
-          tfsec_args: --soft-fail
-          github_token: ${{ github.token }}
-
-      - name: Terraform Plan
+      - name: Terraform Init and Plan
         id: plan
         shell: bash
         run: |
+          terraform fmt -check
+          terraform init -backend-config="resource_group_name=${{inputs.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{inputs.STORAGE_ACCOUNT}}" -backend-config="container_name=${{inputs.CONTAINER_NAME}}"
+          terraform plan -no-color -var-file="./parameters/dev.tfvars"
+          terraform validate -no-color
           export exitcode=0
           cd ${{inputs.parameters}}
           terraform plan -no-color -var-file="./parameters/dev.tfvars" -out main.tfplan || export exitcode=$?
@@ -79,7 +54,7 @@ runs:
         uses: actions/upload-artifact@v4
         with:
           name: tfplan
-          path: ${{inputs.working_directory}}/main.tfplan
+          path: ${{inputs.parameters}}/main.tfplan
 
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
@@ -90,6 +65,9 @@ runs:
         id: tf-plan-string
         shell: bash
         run: |
+            cd ${{inputs.parameters}}
+            terraform init -backend-config="resource_group_name=${{inputs.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{inputs.STORAGE_ACCOUNT}}" -backend-config="container_name=${{inputs.CONTAINER_NAME}}"
+
             TERRAFORM_PLAN=$(terraform show -no-color main.tfplan)
             
             delimiter="$(openssl rand -hex 8)"
