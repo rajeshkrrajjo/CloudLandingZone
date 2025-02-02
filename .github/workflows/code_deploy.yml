@@ -111,7 +111,7 @@ jobs:
         environment: prod
         defaults:
             run:
-            working-directory: ./azure/deploy
+             working-directory: ./azure/deploy
             
         steps:
           - name: Checkout code
@@ -134,8 +134,8 @@ jobs:
           - name: Download Terraform Plan
             uses: actions/download-artifact@v4
             with:
-            name: tfplan
-            path: ./azure/deploy
+             name: tfplan
+             path: ./azure/deploy
 
           - name: Terraform Apply
             run: terraform apply -auto-approve "./main.tfplan"
