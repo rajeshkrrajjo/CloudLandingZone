@@ -1,0 +1,26 @@
+name: build-and-test
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        variant: [dev, qa, prod]
+    steps:
+      - uses: actions/checkout@v3
+      - run: ./build ${{ matrix.variant }}
+      - run: |
+            echo "##[set-output name=variant]${{ matrix.variant }}"
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [build:${{ matrix.variant }}]	# The magic needs to happen here
+    strategy:
+      matrix:
+        variant: [dev, qa, prod]
+    steps:
+      - uses: actions/checkout@v3[
+      - run: |
+            echo "##[set-output name=variant]${{ matrix.variant }}"
