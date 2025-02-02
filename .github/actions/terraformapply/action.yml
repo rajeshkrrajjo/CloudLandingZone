@@ -22,9 +22,8 @@ outputs:
     description: "Random number"
     value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
-  using: "composite"
-            
-        steps:
+     using: "composite"  
+     steps:
           - name: Checkout code
             uses: actions/checkout@v2
 
