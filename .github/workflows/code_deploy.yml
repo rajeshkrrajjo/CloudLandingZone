@@ -104,38 +104,38 @@ jobs:
           run: |
              echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
 
-   terraform-apply:
-    needs: terraform-plan
-    name: Terraform Apply
-    runs-on: ubuntu-latest
-    environment: prod
-    defaults:
-        run:
-         working-directory: ./azure/deploy
+    terraform-apply:
+        needs: terraform-plan
+        name: Terraform Apply
+        runs-on: ubuntu-latest
+        environment: prod
+        defaults:
+            run:
+            working-directory: ./azure/deploy
             
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v2
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+          - name: Setup Terraform
+            uses: hashicorp/setup-terraform@v2
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-            tenant-id: ${{ secrets.TENANT_ID }}
-            client-id: ${{ secrets.CLIENT_ID }}
-            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+          - name: Azure Login
+            uses: azure/login@v2
+            with:
+                tenant-id: ${{ secrets.TENANT_ID }}
+                client-id: ${{ secrets.CLIENT_ID }}
+                subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
-      - name: Terraform Init
-        id: init
-        run: terraform init -backend-config="resource_group_name=${{vars.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{vars.STORAGE_ACCOUNT}}" -backend-config="container_name=${{vars.CONTAINER_NAME}}"
+          - name: Terraform Init
+            id: init
+            run: terraform init -backend-config="resource_group_name=${{vars.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{vars.STORAGE_ACCOUNT}}" -backend-config="container_name=${{vars.CONTAINER_NAME}}"
 
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v4
-        with:
-          name: tfplan
-          path: ./azure/deploy
+          - name: Download Terraform Plan
+            uses: actions/download-artifact@v4
+            with:
+            name: tfplan
+            path: ./azure/deploy
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve "./main.tfplan"
+          - name: Terraform Apply
+            run: terraform apply -auto-approve "./main.tfplan"
