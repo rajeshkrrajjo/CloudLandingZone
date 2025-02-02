@@ -29,7 +29,6 @@ runs:
       - name: Terraform Fmt
         id: fmt
         run: terraform fmt -check
-      
 
       - name: Terraform Init
         id: init
