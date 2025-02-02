@@ -38,6 +38,12 @@ jobs:
         - name: Terraform Fmt
           id: fmt
           run: terraform fmt -check
+        - name: Azure Login
+          uses: azure/login@v2
+          with:
+            tenant-id: ${{ secrets.TENANT_ID }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
         - name: Terraform Init
           id: init
