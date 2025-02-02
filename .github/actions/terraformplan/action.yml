@@ -64,6 +64,7 @@ runs:
         shell: bash
         run: |
           export exitcode=0
+          cd ${{inputs.parameters}}
           terraform plan -no-color -var-file="./parameters/dev.tfvars" -out main.tfplan || export exitcode=$?
           echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
           if [ $exitcode -eq 1 ]; then
