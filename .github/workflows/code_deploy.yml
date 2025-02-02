@@ -20,7 +20,7 @@ jobs:
         environment: prod
         defaults:
             run:
-              working-directory: ./azure
+              working-directory: ./azure/deploy
     
         steps:
         - name: Checkout code
