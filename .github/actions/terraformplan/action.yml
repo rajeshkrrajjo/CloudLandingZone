@@ -34,6 +34,7 @@ runs:
         id: plan
         shell: bash
         run: |
+          cd ${{inputs.parameters}}
           terraform fmt -check
           terraform init -backend-config="resource_group_name=${{inputs.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{inputs.STORAGE_ACCOUNT}}" -backend-config="container_name=${{inputs.CONTAINER_NAME}}"
           terraform plan -no-color -var-file="./parameters/dev.tfvars"
