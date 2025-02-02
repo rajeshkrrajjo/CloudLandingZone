@@ -5,12 +5,33 @@ inputs:
     description: 'Working directory of terraform code'
     required: true
     default: 'azure'
+  environment:
+    description: 'Environment to deploy'
+    required: true
+    default: 'prod'
+    type: environment
+  RESOURCE_GROUP:
+    description: 'Azure Resource Group'
+    required: true
+    type: string
+  STORAGE_ACCOUNT:
+    description: 'Azure Storage Account'
+    required: true
+    type: string
+  CONTAINER_NAME:
+    description: 'Azure Container Name'
+    required: true
+    type: string
 outputs:
   random-number:
     description: "Random number"
     value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
   using: "composite"
+  environment: ${{ inputs.environment }}
+  defaults:
+    run:
+      working-directory: ${{ inputs.workingdirectory }}
   steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -24,7 +45,7 @@ runs:
 
       - name: Terraform Init
         id: init
-        run: terraform init -backend-config="resource_group_name=${{vars.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{vars.STORAGE_ACCOUNT}}" -backend-config="container_name=${{vars.CONTAINER_NAME}}"
+        run: terraform init -backend-config="resource_group_name=${{inputs.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{inputs.STORAGE_ACCOUNT}}" -backend-config="container_name=${{inputs.CONTAINER_NAME}}"
 
       - name: Terraform Validate
         id: validate
@@ -56,35 +77,6 @@ runs:
           name: tfplan
           path: ${{inputs.working_directory}}/main.tfplan
 
-      - name: Update Pull Request
-        uses: actions/github-script@v6
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-  
-            <details><summary>Show Plan</summary>
-  
-            \`\`\`\n
-            ${process.env.PLAN}
-            \`\`\`
-  
-            </details>
-  
-            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-  
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
-      
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
@@ -109,18 +101,4 @@ runs:
           SUMMARY: ${{ steps.tf-plan-string.outputs.summary }}
         run: |
           echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
-      - name: Push Terraform Output to PR
-        if: github.ref != 'refs/heads/main'
-        uses: actions/github-script@v7
-        env:
-          SUMMARY: "${{ steps.tf-plan-string.outputs.summary }}"
-        with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            script: |
-                const body = `${process.env.SUMMARY}`;
-                github.rest.issues.createComment({
-                    issue_number: context.issue.number,
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    body: body
-                })
+      

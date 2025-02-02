@@ -16,7 +16,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: [build:${{ matrix.variant }}]	# The magic needs to happen here
+    needs: [build:${{matrix.variant}}]	# The magic needs to happen here
     strategy:
       matrix:
         variant: [dev, qa, prod]
