@@ -104,7 +104,7 @@ jobs:
           run: |
              echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
 
- terraform-apply:
+   terraform-apply:
     needs: terraform-plan
     name: Terraform Apply
     runs-on: ubuntu-latest
@@ -119,6 +119,13 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+            tenant-id: ${{ secrets.TENANT_ID }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: Terraform Init
         id: init
