@@ -2,9 +2,7 @@
 module "rg" {
   source = "../modules/resource-group"
 
-  rg_name  = "terra-rg-02"
-  location = "eastus"
-  tags = {
-    environment = "dev"
-  }
+  rg_name  =var.resource_group_name
+  location = var.location
+  tags = var.tags
 }
