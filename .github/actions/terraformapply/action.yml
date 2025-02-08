@@ -1,7 +1,7 @@
 name: 'TerraformApply'
 description: 'Workflow does Terraform apply'
 inputs:
-  parameters:
+  working-directory:
     description: 'Path to Terraform files'
     required: true
     type: string
@@ -15,6 +15,10 @@ inputs:
     type: string
   CONTAINER_NAME:
     description: 'Azure Container Name'
+    required: true
+    type: string
+  envrionment_run:
+    description: 'Environment to run the Terraform apply'
     required: true
     type: string
 outputs:
@@ -41,10 +45,10 @@ runs:
             uses: actions/download-artifact@v4
             with:
              name: tfplan
-             path: ${{ inputs.parameters }}
+             path: ${{ inputs.working-directory }}
 
           - name: Terraform Apply
             shell: bash
             run: |
-              cd ${{ inputs.parameters }}
-              terraform apply -auto-approve "./main.tfplan"
+              cd ${{ inputs.working-directory }}
+              terraform apply -auto-approve "./main.tfplan" -no-color -var-file="./parameters/${{inputs.envrionment_run}}.tfvars"

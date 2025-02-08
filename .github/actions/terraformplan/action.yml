@@ -1,7 +1,7 @@
 name: 'TerraformPlan'
 description: 'Workflow does Terraform Plan'
 inputs:
-  parameters:
+  working-directory:
     description: 'Path to Terraform files'
     required: true
     type: string
@@ -15,6 +15,10 @@ inputs:
     type: string
   CONTAINER_NAME:
     description: 'Azure Container Name'
+    required: true
+    type: string
+  envrionment_run:
+    description: 'Environment to run the Terraform plan'
     required: true
     type: string
 outputs:
@@ -34,13 +38,12 @@ runs:
         id: plan
         shell: bash
         run: |
-          cd ${{inputs.parameters}}
+          cd ${{inputs.working-directory}}
           terraform fmt -check
           terraform init -backend-config="resource_group_name=${{inputs.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{inputs.STORAGE_ACCOUNT}}" -backend-config="container_name=${{inputs.CONTAINER_NAME}}"
-          terraform plan -no-color -var-file="./parameters/dev.tfvars"
+          terraform plan -no-color -var-file="./parameters/${{inputs.envrionment_run}}.tfvars" -out main.tfplan || export exitcode=$?
           terraform validate -no-color
           export exitcode=0
-          terraform plan -no-color -var-file="./parameters/dev.tfvars" -out main.tfplan || export exitcode=$?
           echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
           if [ $exitcode -eq 1 ]; then
             echo "Error: Terraform plan failed"
@@ -54,7 +57,7 @@ runs:
         uses: actions/upload-artifact@v4
         with:
           name: tfplan
-          path: ${{inputs.parameters}}/main.tfplan
+          path: ${{inputs.working-directory}}/main.tfplan
 
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
@@ -65,7 +68,7 @@ runs:
         id: tf-plan-string
         shell: bash
         run: |
-            cd ${{inputs.parameters}}
+            cd ${{inputs.working-directory}}
             terraform init -backend-config="resource_group_name=${{inputs.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{inputs.STORAGE_ACCOUNT}}" -backend-config="container_name=${{inputs.CONTAINER_NAME}}"
 
             TERRAFORM_PLAN=$(terraform show -no-color main.tfplan)

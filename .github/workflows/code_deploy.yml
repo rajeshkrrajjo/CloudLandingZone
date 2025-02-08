@@ -20,9 +20,9 @@ env:
   ARM_USE_AZUREAD: true
 
 jobs:
-    terraform_plan:
+    deploy_to_Development:
         runs-on: ubuntu-latest
-        environment: prod
+        environment: dev
         defaults:
             run:
               working-directory: ./azure/deploy
@@ -41,15 +41,55 @@ jobs:
         - name: Terraform Plan Action
           uses: ./.github/actions/terraformplan
           with:
-            parameters: './azure/deploy'
+            working-directory: './azure/deploy'
             RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
             STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
             CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+            envrionment_run: 'dev'
+
     
         - name: Terraform Apply
           uses: ./.github/actions/terraformapply
           with:
-            parameters: './azure/deploy'
+            working-directory: './azure/deploy'
             RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
             STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
             CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+            envrionment_run: 'dev'
+  
+    deploy_to_Production:
+        runs-on: ubuntu-latest
+        environment: prod
+        needs: [deploy_to_Development]
+        defaults:
+            run:
+              working-directory: ./azure/deploy
+    
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+        
+        - name: Azure Login
+          uses: azure/login@v2
+          with:
+            tenant-id: ${{ secrets.TENANT_ID }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+        
+        - name: Terraform Plan Action
+          uses: ./.github/actions/terraformplan
+          with:
+            working-directory: './azure/deploy'
+            RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
+            STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
+            CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+            envrionment_run: 'prod'
+    
+        - name: Terraform Apply
+          uses: ./.github/actions/terraformapply
+          with:
+            working-directory: './azure/deploy'
+            RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
+            STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
+            CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+            envrionment_run: 'prod'

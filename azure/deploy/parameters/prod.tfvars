@@ -1,7 +1,7 @@
-resource_group_name = "rg-dev-01"
+resource_group_name = "rg-prod-01"
 location = "australiaeast"
 tags = {
-  environment = "dev"
+  environment = "prod"
   owner = "rajjo"
   location = "australiaeast"
 }
