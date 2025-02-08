@@ -17,6 +17,18 @@ inputs:
     description: 'Azure Container Name'
     required: true
     type: string
+  client-id:
+    description: 'Azure Client ID'
+    required: true
+    type: secret
+  tenant-id:
+    description: 'Azure Tenant ID'
+    required: true
+    type: secret
+  subscription-id:
+    description: 'Azure Subscription ID'
+    required: true
+    type: secret
 outputs:
   random-number:
     description: "Random number"
@@ -45,6 +57,10 @@ runs:
 
           - name: Terraform Apply
             shell: bash
+            env:
+              ARM_CLIENT_ID: ${{ inputs.client-id }}
+              ARM_TENANT_ID: ${{ inputs.tenant-id }}
+              ARM_SUBSCRIPTION_ID: ${{ inputs.subscription-id }}
             run: |
               cd ${{ inputs.working-directory }}
               terraform apply -auto-approve "./main.tfplan"

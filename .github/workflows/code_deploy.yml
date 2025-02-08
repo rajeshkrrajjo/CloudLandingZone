@@ -13,11 +13,6 @@ permissions:
     pull-requests: write
     contents: read
 
-env:
-  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-  ARM_USE_AZUREAD: true
 
 jobs:
     deploy_to_Development:
@@ -45,6 +40,9 @@ jobs:
             RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
             STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
             CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            tenant-id: ${{ secrets.TENANT_ID }}
+            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
             envrionment_run: 'dev'
 
     
@@ -55,6 +53,9 @@ jobs:
             RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
             STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
             CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            tenant-id: ${{ secrets.TENANT_ID }}
+            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
   
     deploy_to_Production:
         runs-on: ubuntu-latest
@@ -82,6 +83,9 @@ jobs:
             RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
             STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
             CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            tenant-id: ${{ secrets.TENANT_ID }}
+            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
             envrionment_run: 'prod'
     
         - name: Terraform Apply
@@ -91,3 +95,6 @@ jobs:
             RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
             STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
             CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            tenant-id: ${{ secrets.TENANT_ID }}
+            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
