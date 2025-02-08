@@ -17,10 +17,6 @@ inputs:
     description: 'Azure Container Name'
     required: true
     type: string
-  envrionment_run:
-    description: 'Environment to run the Terraform apply'
-    required: true
-    type: string
 outputs:
   random-number:
     description: "Random number"
@@ -51,4 +47,4 @@ runs:
             shell: bash
             run: |
               cd ${{ inputs.working-directory }}
-              terraform apply -auto-approve "./main.tfplan" -no-color -var-file="./parameters/${{inputs.envrionment_run}}.tfvars"
+              terraform apply -auto-approve "./main.tfplan"
