@@ -42,12 +42,12 @@ runs:
           - name: Setup Terraform
             uses: hashicorp/setup-terraform@v2
 
-          - name: Terraform init
-            id: init
-            shell: bash
-            run: |
-              cd ${{ inputs.parameters }}
-              terraform init -backend-config="resource_group_name=${{inputs.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{inputs.STORAGE_ACCOUNT}}" -backend-config="container_name=${{inputs.CONTAINER_NAME}}"
+          # - name: Terraform init
+          #   id: init
+          #   shell: bash
+          #   run: |
+          #     cd ${{ inputs.parameters }}
+          #     terraform init -backend-config="resource_group_name=${{inputs.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{inputs.STORAGE_ACCOUNT}}" -backend-config="container_name=${{inputs.CONTAINER_NAME}}"
 
           - name: Download Terraform Plan
             uses: actions/download-artifact@v4
