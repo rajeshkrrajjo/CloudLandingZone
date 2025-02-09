@@ -107,12 +107,12 @@ runs:
           echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
       
       - name: Terraform Apply
-            shell: bash
-            env:
-              ARM_CLIENT_ID: ${{ inputs.client-id }}
-              ARM_TENANT_ID: ${{ inputs.tenant-id }}
-              ARM_SUBSCRIPTION_ID: ${{ inputs.subscription-id }}
-            run: |
-              cd ${{ inputs.working-directory }}
-              terraform apply -auto-approve "./main.tfplan"
+        shell: bash
+        env:
+            ARM_CLIENT_ID: ${{ inputs.client-id }}
+            ARM_TENANT_ID: ${{ inputs.tenant-id }}
+            ARM_SUBSCRIPTION_ID: ${{ inputs.subscription-id }}
+        run: |
+            cd ${{ inputs.working-directory }}
+            terraform apply -auto-approve "./main.tfplan"
       
