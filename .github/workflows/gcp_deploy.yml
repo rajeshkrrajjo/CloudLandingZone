@@ -1,7 +1,5 @@
-name: List services in GCP
+name: Terraform on GCP
 on:
-  push:
-     branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
@@ -9,35 +7,45 @@ permissions:
   contents: read
 
 jobs:
-  terraform_deploy:
+  deploy_to_dev:
     runs-on: ubuntu-latest
-    environment: prod
-    
+    environment: dev
+    defaults:
+      run:
+        working-directory: ./gcp/dev
     steps:
-    - name: Action Checkout
-      uses: actions/checkout@v3
-     
-    - name: GCP OIDC Login
-      id: auth
-      uses: 'google-github-actions/auth@v2'
-      with:
-        service_account: oidc-account@unified-adviser-447010-g9.iam.gserviceaccount.com
-        workload_identity_provider: projects/420668524245/locations/global/workloadIdentityPools/githubpool/providers/github-actions-provider
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: GCloud SDK
-      uses: 'google-github-actions/setup-gcloud@v1'
-      with: 
-        version: '>= 418.0.0'
+      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
 
-    - name: Install Terraform
-      uses: little-core-labs/install-terraform@v2.0.0
-      with:
-          version: 0.13.4
-    - name: Terraform apply
-      run: |
-        cd gcp
-        terraform init
-        terraform plan
-        terraform apply -auto-approve
-    
 
+      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      - name: Terraform Init
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS_DEV }}
+        run: |
+          cd ./gcp/dev
+          terraform init
+
+      # Checks that all Terraform configuration files adhere to a canonical format
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      # Generates an execution plan for Terraform
+      - name: Terraform Plan
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS_DEV }}
+        run: |
+          terraform plan
+
+        # On push to main, build or change infrastructure according to Terraform configuration files
+        # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+      - name: Terraform Apply
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS_DEV }}
+        run: |
+          cd ./gcp/dev
+          terraform apply -auto-approve
