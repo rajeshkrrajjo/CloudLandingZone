@@ -27,7 +27,6 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS_DEV }}
         run: |
-          cd ./gcp/dev
           terraform init
 
       # Checks that all Terraform configuration files adhere to a canonical format
@@ -47,5 +46,4 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS_DEV }}
         run: |
-          cd ./gcp/dev
           terraform apply -auto-approve
