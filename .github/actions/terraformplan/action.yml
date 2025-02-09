@@ -56,7 +56,7 @@ runs:
         run: |
           cd ${{inputs.working-directory}}
           terraform fmt -check
-          terraform init 
+          terraform init -backend-config="resource_group_name=${{inputs.RESOURCE_GROUP}}" -backend-config="storage_account_name=${{inputs.STORAGE_ACCOUNT}}" -backend-config="container_name=${{inputs.CONTAINER_NAME}}"
           terraform plan -no-color -var-file="./parameters/${{inputs.envrionment_run}}.tfvars" -out main.tfplan || export exitcode=$?
           terraform validate -no-color
           export exitcode=0
