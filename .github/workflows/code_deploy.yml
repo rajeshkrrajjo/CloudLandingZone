@@ -33,7 +33,7 @@ jobs:
             client-id: ${{ secrets.CLIENT_ID }}
             subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
         
-        - name: Terraform Plan Action
+        - name: Terraform Plan & Apply Action
           uses: ./.github/actions/terraformplan
           with:
             working-directory: './azure/deploy'
@@ -46,16 +46,16 @@ jobs:
             envrionment_run: 'dev'
 
     
-        - name: Terraform Apply
-          uses: ./.github/actions/terraformapply
-          with:
-            working-directory: './azure/deploy'
-            RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
-            STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
-            CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
-            client-id: ${{ secrets.CLIENT_ID }}
-            tenant-id: ${{ secrets.TENANT_ID }}
-            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+        # - name: Terraform Apply
+        #   uses: ./.github/actions/terraformapply
+        #   with:
+        #     working-directory: './azure/deploy'
+        #     RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
+        #     STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
+        #     CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+        #     client-id: ${{ secrets.CLIENT_ID }}
+        #     tenant-id: ${{ secrets.TENANT_ID }}
+        #     subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
   
     deploy_to_Production:
         runs-on: ubuntu-latest
@@ -76,7 +76,7 @@ jobs:
             client-id: ${{ secrets.CLIENT_ID }}
             subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
         
-        - name: Terraform Plan Action
+        - name: Terraform Plan & Apply Action
           uses: ./.github/actions/terraformplan
           with:
             working-directory: './azure/deploy'
@@ -88,13 +88,13 @@ jobs:
             subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
             envrionment_run: 'prod'
     
-        - name: Terraform Apply
-          uses: ./.github/actions/terraformapply
-          with:
-            working-directory: './azure/deploy'
-            RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
-            STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
-            CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
-            client-id: ${{ secrets.CLIENT_ID }}
-            tenant-id: ${{ secrets.TENANT_ID }}
-            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+        # - name: Terraform Apply
+        #   uses: ./.github/actions/terraformapply
+        #   with:
+        #     working-directory: './azure/deploy'
+        #     RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
+        #     STORAGE_ACCOUNT: ${{ vars.STORAGE_ACCOUNT }}
+        #     CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+        #     client-id: ${{ secrets.CLIENT_ID }}
+        #     tenant-id: ${{ secrets.TENANT_ID }}
+        #     subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
