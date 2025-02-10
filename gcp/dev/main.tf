@@ -32,7 +32,7 @@ module "gke" {
   gke_name     = "my-first-cluster-01"
   location     = "us-east1"
   machine_type = "e2-micro"
-  network_name      = "dev-vpc-01"
+  network_name = "dev-vpc-01"
   subnet_name  = "dev-vpc-01-subnet01"
 
 }
