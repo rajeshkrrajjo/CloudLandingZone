@@ -29,10 +29,10 @@ module "vpc" {
 module "gke" {
   source = "../modules/gke"
 
-  cluster_name       = "my-first-cluster-01"
-  location           = "us-east1"
-  machine_type       = "e2-micro"
-  network            = "dev-vpc-01"
-  subnet_name        = "dev-vpc-01-subnet01"
+  gke_name     = "my-first-cluster-01"
+  location     = "us-east1"
+  machine_type = "e2-micro"
+  network      = "dev-vpc-01"
+  subnet_name  = "dev-vpc-01-subnet01"
 
 }
