@@ -11,7 +11,7 @@ variable "machine_type" {
   type    = string
   default = "e2-micro"
 }
-variable "network" {
+variable "network_name" {
   type    = string
   default = "dev-vpc-01"
 }

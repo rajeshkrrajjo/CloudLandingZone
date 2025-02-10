@@ -12,6 +12,6 @@ resource "google_container_cluster" "primary" {
     ]
   }
 
-  network    = var.network_nmae
+  network    = var.network_name
   subnetwork = var.subnet_name
 }
