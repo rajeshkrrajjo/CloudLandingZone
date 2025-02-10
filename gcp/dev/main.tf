@@ -30,7 +30,6 @@ module "gke" {
   source = "../modules/gke"
 
   cluster_name       = "my-first-cluster-01"
-  initial_node_count = "3"
   location           = "us-east1"
   machine_type       = "e2-micro"
   network            = "dev-vpc-01"
