@@ -34,7 +34,7 @@ jobs:
         shell: pwsh
         run: |
           write-output ${{steps.one.outputs.test}}
-          $xyz = ${{steps.one.outputs.test}}
+          $xyz = "${{steps.one.outputs.test}}"
           Write-Output $xyz
           Write-Output $xyz.name
           
