@@ -35,7 +35,7 @@ jobs:
       - name: Run a multi-line script
         shell: pwsh
         run: |
-          write-output ${{steps.one.outputs.test}}
+          write-output "${{steps.one.outputs.test}}"
           write-output ${{steps.one.outputs.test1}}
           
           
